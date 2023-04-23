@@ -12,10 +12,10 @@ export class GuestController {
   //   return this.guestService.create(createGuestDto)
   // }
 
-  // @Get()
-  // findAll() {
-  //   return this.guestService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.guestService.findAll();
+  }
 
   @Get(':uuid')
   async findOne(@Param('uuid') uuid: string) {
