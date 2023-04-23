@@ -12,6 +12,11 @@ export class GuestController {
   //   return this.guestService.create(createGuestDto)
   // }
 
+  @Post('batch')
+  create(@Body(new ValidationPipe({ transform: true })) guests: CreateGuestDto[]) {
+    return this.guestService.batchInsert(guests)
+  }
+
   @Get()
   findAll() {
     return this.guestService.findAll();

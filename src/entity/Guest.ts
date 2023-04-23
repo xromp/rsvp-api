@@ -29,7 +29,7 @@ export class Guest {
     })
     status: string
 
-    @Column({ readonly: true })
+    @Column({ readonly: true, default:false })
     canAddGuest: boolean;
 
 

@@ -16,6 +16,11 @@ export class GuestService {
     return this.repository.save(guest);
   }
 
+
+  batchInsert(guest: CreateGuestDto[]): Promise<Guest[]> {
+    return this.repository.save(guest);
+  }
+
   findAll(): Promise<Guest[]> {
     return this.repository.find();
   }
