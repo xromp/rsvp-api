@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UsePipes, ValidationPipe, Query } from '@nestjs/common';
 import { GuestService } from './guest.service';
 import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
@@ -13,14 +13,23 @@ export class GuestController {
   // }
 
   @Post('batch')
-  create(@Body(new ValidationPipe({ transform: true })) guests: CreateGuestDto[]) {
+  create(@Query() filter, @Body(new ValidationPipe({ transform: true })) guests: CreateGuestDto[]) {
+    if (filter.passcode !== 'secretonly') return;
+    delete filter.passcode;
     return this.guestService.batchInsert(guests)
   }
 
   @Get()
-  findAll() {
-    return this.guestService.findAll();
+  findAll(@Query() filter) {
+    if (filter.passcode !== 'secretonly') return;
+    delete filter.passcode;
+    return this.guestService.findAll(filter);
   }
+
+  // @Get('report')
+  // findStatus() {
+  //   return this.guestService.report();
+  // }
 
   @Get(':uuid')
   async findOne(@Param('uuid') uuid: string) {
@@ -33,8 +42,10 @@ export class GuestController {
     return await this.guestService.update({ uuid }, updateGuestDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.guestService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Query() filter, @Param('id') id: string) {
+    if (filter.passcode !== 'secretonly') return;
+    delete filter.passcode;
+    return this.guestService.remove(+id);
+  }
 }

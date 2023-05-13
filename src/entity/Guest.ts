@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { AfterLoad, Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 export enum Status {
     pending = 'pending',
@@ -29,11 +29,11 @@ export class Guest {
     })
     status: string
 
-    @Column({ readonly: true, default:false })
+    @Column({ readonly: true, default: false })
     canAddGuest: boolean;
 
 
-    @Column({ readonly: false })
+    @Column({ readonly: false, default: false })
     anonymous: boolean;
 
     @Column({ default: 0 })
@@ -48,4 +48,13 @@ export class Guest {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date
     updatedAt: Date
+
+    inviteLink: string;
+    fullname: string;
+
+    @AfterLoad()
+    setComputed() {
+        this.inviteLink = `https://app.romgotaperfectcathch.com/${this.uuid}`;
+        this.fullname = `${this.lastName}, ${this.firstName}`
+    }
 }
